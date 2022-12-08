@@ -3,5 +3,4 @@ src/public/image
 .env
 
 # production
-/build
 /iisnode
