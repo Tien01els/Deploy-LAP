@@ -11,7 +11,10 @@ module.exports = {
             });
             return respMapper(200, roles);
         } catch (error) {
-            if (error.stack) console.log(error.stack);
+            if (error.stack) {
+                console.log(error.message);
+                console.log(error.stack);
+            } 
             throw errorResp(400, error.message);
         }
     },
@@ -20,7 +23,10 @@ module.exports = {
             await db.Role.create(role);
             return respMapper(201, 'Role created successfully');
         } catch (error) {
-            if (error.stack) console.log(error.stack);
+            if (error.stack) {
+                console.log(error.message);
+                console.log(error.stack);
+            } 
             throw errorResp(400, error.message);
         }
     },
