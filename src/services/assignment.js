@@ -114,7 +114,7 @@ module.exports = {
             assignment.studentNotSubmit = 0;
             const students = assignment.students;
             if (students)
-                for (let i = 0; i < students?.length; i++) {
+                for (let i = 0; i < students.length; i++) {
                     if (students[i].studentAssignment[0].dateComplete) {
                         if (students[i].studentAssignment[0].score >= assignment.passScore)
                             assignment.studentPassed = assignment.studentPassed + 1;
@@ -127,9 +127,10 @@ module.exports = {
                             assignment.studentLateSubmit = assignment.studentLateSubmit + 1;
                     } else assignment.studentNotSubmit = assignment.studentNotSubmit + 1;
                 }
-            assignment.avgScoreOfStudent = avgScoreOfStudent[0]?.avgScoreOfStudent;
+            assignment.avgScoreOfStudent =
+                avgScoreOfStudent[0] && avgScoreOfStudent[0].avgScoreOfStudent;
             assignment.numberQuestionOfAssignment =
-                numberQuestionOfAssignment?.numberQuestionOfAssignment;
+                numberQuestionOfAssignment.numberQuestionOfAssignment;
             return respMapper(200, assignment);
         } catch (error) {
             if (error.stack) {
