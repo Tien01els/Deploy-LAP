@@ -8,6 +8,7 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },
@@ -18,6 +19,7 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },
@@ -29,6 +31,18 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
+            return res.status(errorStatus).send(error.data);
+        }
+    },
+    getAverageScoreOfAllClass: async (req, res) => {
+        try {
+            const teacherId = req.userId;
+            let result = await classService.findAverageScoreOfAllClass(teacherId);
+            return res.status(result.statusCode).send(result.data);
+        } catch (error) {
+            const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },
@@ -48,6 +62,7 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },
@@ -65,6 +80,7 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },
@@ -76,6 +92,7 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },

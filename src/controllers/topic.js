@@ -7,6 +7,7 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },
@@ -16,6 +17,7 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },
@@ -36,6 +38,7 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },
@@ -51,6 +54,7 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },
@@ -70,6 +74,18 @@ module.exports = {
             return res.status(result.statusCode).send(result.data);
         } catch (error) {
             const errorStatus = error.statusCode || 500;
+            console.log(error);
+            return res.status(errorStatus).send(error.data);
+        }
+    },
+    deleteTopic: async (req, res) => {
+        try {
+            const id = req.params.id;
+            let result = await topicService.deleteTopic(id);
+            return res.status(result.statusCode).send(result.data);
+        } catch (error) {
+            const errorStatus = error.statusCode || 500;
+            console.log(error);
             return res.status(errorStatus).send(error.data);
         }
     },

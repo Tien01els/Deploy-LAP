@@ -19,6 +19,7 @@ classTopicRouter.get(
     authRole(role.ROLE_STUDENT),
     classTopicController.getTopicsOfClassForStudent
 );
+
 classTopicRouter.post(
     '/',
     verifyToken,
@@ -31,5 +32,6 @@ classTopicRouter.delete(
     authRole(role.ROLE_TEACHER),
     classTopicController.deleteClassTopic
 );
+
 
 module.exports = classTopicRouter;

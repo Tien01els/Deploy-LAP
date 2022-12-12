@@ -1,7 +1,11 @@
 const sequelize = require('sequelize');
+const fs = require('fs');
+const { promisify } = require('util');
+
 const db = require('../models/index');
 const { respMapper, errorResp } = require('../helper/helper');
 
+const unlinkAsync = promisify(fs.unlink);
 module.exports = {
     findClassInfo: async (id) => {
         try {
@@ -121,6 +125,51 @@ module.exports = {
             throw errorResp(400, error.message);
         }
     },
+    findAverageScoreOfAllClass: async (teacherId) => {
+        try {
+            let sumAverageScore = await db.Class.findAll({
+                where: { teacherId, isDeleted: 0 },
+                attributes: [
+                    'id',
+                    'className',
+                    [
+                        sequelize.fn('sum', sequelize.col('averageScore')),
+                        'sumAverageScoreOfStudent',
+                    ],
+                ],
+                include: [
+                    {
+                        attributes: ['id'],
+                        model: db.Student,
+                        as: 'student',
+                        where: { isDeleted: 0 },
+                        required: false,
+                    },
+                ],
+                group: ['id'],
+            });
+            const result = new Array();
+            for (let i = 0; i < sumAverageScore.length; ++i) {
+                result.push({
+                    classId: sumAverageScore[i].id,
+                    className: sumAverageScore[i].className,
+                    averageScore:
+                        sumAverageScore[i].dataValues.sumAverageScoreOfStudent &&
+                        sumAverageScore[i].student.length
+                            ? sumAverageScore[i].dataValues.sumAverageScoreOfStudent /
+                              sumAverageScore[i].student.length
+                            : 0,
+                });
+            }
+            return respMapper(200, result);
+        } catch (error) {
+            if (error.stack) {
+                console.log(error.message);
+                console.log(error.stack);
+            }
+            throw errorResp(400, error.message);
+        }
+    },
 
     createClassInfo: async (classInfo) => {
         try {
@@ -142,10 +191,34 @@ module.exports = {
     updateClassInfo: async (id, classInfo) => {
         try {
             const currentClassInfo = await db.Class.findOne({
-                where: { className: classInfo.className },
+                where: { className: classInfo.className, isDeleted: 0 },
             });
             if (currentClassInfo && currentClassInfo.id === id)
                 return errorResp(409, 'The name of the class is the same as another class');
+
+            const existingClass = await db.Class.findByPk(id, {
+                where: { isDeleted: 0 },
+            });
+            if (!existingClass) return errorResp(422, 'Class not found');
+            const arrUrlExistClassImg = existingClass.classImg && existingClass.classImg.split('/');
+            const arrUrlClassImg = classInfo && classInfo.classImg && classInfo.classImg.split('/');
+            if (
+                arrUrlExistClassImg &&
+                arrUrlExistClassImg.length > 0 &&
+                arrUrlClassImg &&
+                arrUrlClassImg.length > 0 &&
+                arrUrlExistClassImg[arrUrlExistClassImg.length - 1] &&
+                arrUrlClassImg[arrUrlClassImg.length - 1] &&
+                arrUrlExistClassImg[arrUrlExistClassImg.length - 1] !==
+                    arrUrlClassImg[arrUrlClassImg.length - 1]
+            )
+                try {
+                    await unlinkAsync(
+                        'src/public/image/' + arrUrlExistClassImg[arrUrlExistClassImg.length - 1]
+                    );
+                } catch (error) {
+                    console.log(error);
+                }
             await db.Class.update(classInfo, {
                 where: { id },
             });
