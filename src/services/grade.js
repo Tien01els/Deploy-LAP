@@ -39,6 +39,7 @@ module.exports = {
                         required: false,
                     },
                 ],
+                group: 'id',
                 raw: true,
             });
             console.log(grades);
