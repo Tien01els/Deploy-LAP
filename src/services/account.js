@@ -170,9 +170,13 @@ module.exports = {
                     };
                     result = await db.Parent.create(parent);
                 }
-                if (result) return respMapper(200, { success: true, message: 'Register success' });
+                if (result)
+                    return respMapper(200, {
+                        success: true,
+                        message: 'Account created successfully',
+                    });
             }
-            return errorResp(500, 'Register failed');
+            return errorResp(500, 'Account created fail');
         } catch (error) {
             if (error.stack) {
                 console.log(error.message);
@@ -291,8 +295,201 @@ module.exports = {
 
     findAllAccount: async () => {
         try {
-            const allAccount = await db.Account.findAll();
+            const allAccount = await db.Account.findAll({
+                attributes: { exclude: ['isDeleted', 'createdAt', 'updatedAt'] },
+                where: { isDeleted: 0 },
+                include: [
+                    {
+                        attributes: ['role'],
+                        model: db.Role,
+                        as: 'role',
+                        where: { isDeleted: 0 },
+                    },
+                ],
+            });
             return respMapper(200, allAccount);
+        } catch (error) {
+            if (error.stack) {
+                console.log(error.message);
+                console.log(error.stack);
+            }
+            throw errorResp(400, error.message);
+        }
+    },
+    findProfile: async (userId, roleId) => {
+        try {
+            let result;
+            if (roleId === 1) {
+                result = await db.Admin.findByPk(userId, {
+                    attributes: {
+                        exclude: ['isDeleted', 'createdAt', 'updatedAt'],
+                    },
+                    include: [
+                        {
+                            attributes: ['email', 'avatarImg'],
+                            model: db.Account,
+                            as: 'account',
+                            where: { isDeleted: 0 },
+                            include: [
+                                {
+                                    attributes: ['role'],
+                                    model: db.Role,
+                                    as: 'role',
+                                    where: { isDeleted: 0 },
+                                },
+                            ],
+                        },
+                    ],
+                });
+            }
+            if (roleId === 2) {
+                result = await db.Teacher.findByPk(userId, {
+                    attributes: {
+                        exclude: ['isDeleted', 'createdAt', 'updatedAt'],
+                    },
+                    include: [
+                        {
+                            attributes: ['email', 'avatarImg'],
+                            model: db.Account,
+                            as: 'account',
+                            where: { isDeleted: 0 },
+                            include: [
+                                {
+                                    attributes: ['role'],
+                                    model: db.Role,
+                                    as: 'role',
+                                    where: { isDeleted: 0 },
+                                },
+                            ],
+                        },
+                    ],
+                });
+            }
+            if (roleId === 3) {
+                result = await await db.Student.findByPk(userId, {
+                    attributes: {
+                        exclude: ['isDeleted', 'createdAt', 'updatedAt'],
+                    },
+                    include: [
+                        {
+                            attributes: ['email', 'avatarImg'],
+                            model: db.Account,
+                            as: 'account',
+                            where: { isDeleted: 0 },
+                            include: [
+                                {
+                                    attributes: ['role'],
+                                    model: db.Role,
+                                    as: 'role',
+                                    where: { isDeleted: 0 },
+                                },
+                            ],
+                        },
+                    ],
+                });
+            }
+            if (roleId === 4) {
+                result = await db.Parent.findByPk(userId, {
+                    attributes: {
+                        exclude: ['isDeleted', 'createdAt', 'updatedAt'],
+                    },
+                    include: [
+                        {
+                            attributes: ['email', 'avatarImg'],
+                            model: db.Account,
+                            as: 'account',
+                            where: { isDeleted: 0 },
+                            include: [
+                                {
+                                    attributes: ['role'],
+                                    model: db.Role,
+                                    as: 'role',
+                                    where: { isDeleted: 0 },
+                                },
+                            ],
+                        },
+                    ],
+                });
+            }
+            return respMapper(200, result);
+        } catch (error) {
+            if (error.stack) {
+                console.log(error.message);
+                console.log(error.stack);
+            }
+            throw errorResp(400, error.message);
+        }
+    },
+
+    updateProfile: async (userId, roleId, profile) => {
+        try {
+            let result;
+            if (roleId === 1) {
+                result = await db.Admin.findByPk(userId, {
+                    attributes: {
+                        exclude: ['isDeleted', 'createdAt', 'updatedAt'],
+                    },
+                });
+            }
+            if (roleId === 2) {
+                result = await db.Teacher.findByPk(userId, {
+                    attributes: {
+                        exclude: ['isDeleted', 'createdAt', 'updatedAt'],
+                    },
+                });
+            }
+            if (roleId === 3) {
+                result = await await db.Student.findByPk(userId, {
+                    attributes: {
+                        exclude: ['isDeleted', 'createdAt', 'updatedAt'],
+                    },
+                });
+            }
+            if (roleId === 4) {
+                result = await db.Parent.findByPk(userId, {
+                    attributes: {
+                        exclude: ['isDeleted', 'createdAt', 'updatedAt'],
+                    },
+                });
+            }
+
+            result.fullName = profile.fullName;
+            result.dateOfBirth = profile.dateOfBirth;
+            result.gender = profile.gender;
+            await result.save();
+
+            await db.Account.update(
+                { avatarImg: profile.avatarImg },
+                { where: { id: result.accountId, isDeleted: false } }
+            );
+            return respMapper(200, result);
+        } catch (error) {
+            if (error.stack) {
+                console.log(error.message);
+                console.log(error.stack);
+            }
+            throw errorResp(400, error.message);
+        }
+    },
+
+    changeActiveAccount: async (id) => {
+        try {
+            const account = await db.Account.findByPk(id);
+            account.isActive = !account.isActive;
+            await account.save();
+            return respMapper(200, 'Account change active successfully');
+        } catch (error) {
+            if (error.stack) {
+                console.log(error.message);
+                console.log(error.stack);
+            }
+            throw errorResp(400, error.message);
+        }
+    },
+    deleteAccount: async (id) => {
+        try {
+            await db.Account.update({ isDeleted: true }, { where: { id: id, isDeleted: 0 } });
+            return respMapper(200, 'Account deleted successfully');
         } catch (error) {
             if (error.stack) {
                 console.log(error.message);

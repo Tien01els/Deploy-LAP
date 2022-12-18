@@ -6,7 +6,7 @@ module.exports = {
             const account = {
                 email: req.body.email,
                 password: req.body.password,
-                roleId: req.body.roleId,
+                roleId: req.body.roleId && parseInt(req.body.roleId),
             };
             const result = await accountService.createAccount(account);
             return res.status(result.statusCode).send(result.data);
@@ -87,6 +87,68 @@ module.exports = {
     getAllAccount: async (req, res) => {
         try {
             const result = await accountService.findAllAccount();
+            return res.status(result.statusCode).send({
+                success: true,
+                message: 'Account',
+                data: result.data,
+            });
+        } catch (error) {
+            const errorStatus = error.statusCode || 500;
+            console.log(error);
+            return res.status(errorStatus).send(error.data);
+        }
+    },
+
+    getProfile: async (req, res) => {
+        try {
+            const userId = req.userId;
+            const roleId = req.roleId;
+            const result = await accountService.findProfile(userId, roleId);
+            return res.status(result.statusCode).send(result.data);
+        } catch (error) {
+            const errorStatus = error.statusCode || 500;
+            console.log(error);
+            return res.status(errorStatus).send(error.data);
+        }
+    },
+
+    editProfile: async (req, res) => {
+        try {
+            const userId = req.userId;
+            const roleId = req.roleId;
+            const profile = {
+                avatarImg: req.body.avatarImg,
+                fullName: req.body.fullName,
+                dateOfBirth: req.body.dateOfBirth,
+                gender: req.body.gender,
+            };
+            const result = await accountService.updateProfile(userId, roleId, profile);
+            return res.status(result.statusCode).send(result.data);
+        } catch (error) {
+            const errorStatus = error.statusCode || 500;
+            console.log(error);
+            return res.status(errorStatus).send(error.data);
+        }
+    },
+
+    changeActiveAccount: async (req, res) => {
+        try {
+            const result = await accountService.changeActiveAccount(req.params.id);
+            return res.status(result.statusCode).send({
+                success: true,
+                message: 'Account',
+                data: result.data,
+            });
+        } catch (error) {
+            const errorStatus = error.statusCode || 500;
+            console.log(error);
+            return res.status(errorStatus).send(error.data);
+        }
+    },
+
+    deleteAccount: async (req, res) => {
+        try {
+            const result = await accountService.deleteAccount(req.params.id);
             return res.status(result.statusCode).send({
                 success: true,
                 message: 'Account',
