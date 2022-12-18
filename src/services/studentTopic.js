@@ -106,7 +106,7 @@ module.exports = {
                 `
                 SELECT st.id, st.status, st.isUnlock, st.isPass, st.dateRequest, st.notificationContentId,
                 t.topicName, t.topicImg, pt.topicName AS prerequisiteTopicName, COUNT(s.id) AS numberSkills, t.description, t.id AS topicId
-                FROM Student_topics AS st JOIN Topics AS t
+                FROM Student_Topics AS st JOIN Topics AS t
                 ON st.studentId = :studentId AND t.id = st.topicId AND st.isDeleted = 0 AND t.isDeleted = 0
                 LEFT JOIN Topics as pt ON pt.id = t.prerequisiteTopicId AND pt.isDeleted = 0 
                 LEFT JOIN Skills AS s ON s.topicId = t.id AND s.isDeleted = 0 

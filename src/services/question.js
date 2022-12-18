@@ -121,7 +121,7 @@ module.exports = {
                     JOIN Skills AS s ON t.id = s.topicId AND ${
                         skillId && 's.id = :skillId AND'
                     } s.isDeleted = 0 
-                    JOIN Skill_questions AS sq ON sq.skillId = s.id AND sq.isDeleted = 0 
+                    JOIN Skill_Questions AS sq ON sq.skillId = s.id AND sq.isDeleted = 0 
                     JOIN Questions AS q ON q.id = sq.questionId AND ${
                         level && 'level = :level AND'
                     } q.isDeleted = 0 

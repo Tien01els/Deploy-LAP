@@ -8,7 +8,7 @@ module.exports = {
             let topics = await db.sequelize.query(
                 `
                 SELECT c.id, t.topicName, t.topicImg, pt.topicName AS prerequisiteTopicName, COUNT(s.id) AS numberSkills, t.description, t.id AS topicId 
-                FROM Class_topics AS c JOIN Topics AS t
+                FROM Class_Topics AS c JOIN Topics AS t
                 ON c.classId = :classId AND t.id = c.topicId AND t.teacherId = :teacherId
                 AND c.isDeleted = 0 AND t.isDeleted = 0
                 LEFT JOIN Topics as pt ON pt.id = t.prerequisiteTopicId AND pt.isDeleted = 0 
@@ -94,7 +94,7 @@ module.exports = {
             const classTopic = await db.sequelize.query(
                 `
                     SELECT c.id, t.topicName, t.topicImg, pt.topicName AS prerequisiteTopicName, COUNT(s.id) AS numberSkills, t.description, t.id AS topicId 
-                    FROM Class_topics AS c JOIN Topics AS t
+                    FROM Class_Topics AS c JOIN Topics AS t
                     ON c.classId = :classId AND t.id = c.topicId
                     AND c.isDeleted = 0 AND t.isDeleted = 0
                     LEFT JOIN Topics as pt ON pt.id = t.prerequisiteTopicId AND pt.isDeleted = 0 
