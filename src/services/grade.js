@@ -55,9 +55,9 @@ module.exports = {
             let topics = await db.sequelize.query(
                 `
                 SELECT t.topicName, t.topicImg, pt.topicName AS prerequisiteTopicName, COUNT(s.id) AS numberSkills, t.description, t.id AS topicId 
-                FROM topics AS t
-                LEFT JOIN topics as pt ON pt.id = t.prerequisiteTopicId AND pt.isDeleted = 0 
-                LEFT JOIN skills AS s ON s.topicId = t.id AND s.isDeleted = 0 
+                FROM Topics AS t
+                LEFT JOIN Topics as pt ON pt.id = t.prerequisiteTopicId AND pt.isDeleted = 0 
+                LEFT JOIN Skills AS s ON s.topicId = t.id AND s.isDeleted = 0 
                 WHERE t.gradeId = :gradeId AND t.isDeleted = 0
                 GROUP BY t.id
                 ORDER BY pt.id
