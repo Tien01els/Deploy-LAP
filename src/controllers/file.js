@@ -30,6 +30,7 @@ module.exports = {
         var action = request.pathname;
         // Path Refinements
         var filePath = path.join(appRoot.path, '\\src\\public\\', action).split('%20').join(' ');
+        console.log(filePath);
         // console.log(filePath);
         // Checking if the path exists
         fs.exists(filePath, function (exists) {
