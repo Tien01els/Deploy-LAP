@@ -28,6 +28,7 @@ module.exports = {
         var request = url.parse(req.url, true);
         // Extracting the path of file
         var action = request.pathname;
+        console.log(appRoot.path);
         // Path Refinements
         var filePath = path.join(appRoot.path, '\\src\\public\\', action).split('%20').join(' ');
         // console.log(filePath);
