@@ -41,7 +41,6 @@ module.exports = {
                 group: 'id',
                 raw: true,
             });
-            console.log(grades);
             return respMapper(200, grades);
         } catch (error) {
             if (error.stack) {

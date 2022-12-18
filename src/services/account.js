@@ -187,7 +187,6 @@ module.exports = {
     },
     loginAccount: async (email, password) => {
         try {
-            console.log(email);
             const account = await db.Account.findOne({
                 where: { email, isDeleted: false },
                 attributes: {
