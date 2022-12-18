@@ -36,7 +36,6 @@ module.exports = {
                         model: db.Class,
                         as: 'class',
                         where: { teacherId, isDeleted: 0 },
-                        required: false,
                     },
                 ],
                 group: 'id',
